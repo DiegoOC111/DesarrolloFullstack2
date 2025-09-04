@@ -1,0 +1,94 @@
+/* styles.css */
+/*https://color.adobe.com/es/search?q=gamer paleta de colores de inspiracion*/
+/* Color Theme Swatches in Hex */
+.Apple:-Essential-Gamer-App-|-Twitch-1-hex { color: #CAA9D9; }
+.Apple:-Essential-Gamer-App-|-Twitch-2-hex { color: #9305F2; }
+.Apple:-Essential-Gamer-App-|-Twitch-3-hex { color: #251940; }
+.Apple:-Essential-Gamer-App-|-Twitch-4-hex { color: #583BBF; }
+.Apple:-Essential-Gamer-App-|-Twitch-5-hex { color: #846CD9; }
+/* General Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #251940;
+    color: #251940;
+    margin: 20px;
+}
+
+
+h1 {
+    color: #CAA9D9;
+    font-size: 2em;
+}
+
+h3 {
+    color: #CAA9D9;
+    font-size: 1.2em;
+}
+
+a {
+    color: #9305F2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    font-size: 1em;
+    line-height: 1.5em;
+}
+
+img {
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+form {
+    background-color: #846CD9;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    width:   50vw;
+}
+
+input, select {
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #251940;
+    color: #846CD9;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: white;
+}
+.Label_Form{
+
+
+    color: #251940;
+}
+.Flex_Container {
+    display: flex;                
+    justify-content: center;      
+    align-items: center;          
+    height: 100vh;                
+    background-color: #251940;   
+}
+.link_form{
+
+    color: white;
+    text-decoration: none;
+
+
+}
+.link_form:hover{
+    text-decoration: underline;
+}
