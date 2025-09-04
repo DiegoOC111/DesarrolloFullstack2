@@ -13,6 +13,7 @@ body {
     background-color: #251940;
     color: #251940;
     margin: 20px;
+    padding-top: 120px;
 }
 
 
@@ -92,4 +93,40 @@ input[type="submit"]:hover {
 }
 .link_form:hover{
     text-decoration: underline;
+}
+.navbar.navbar-light {
+  background-color: #583BBF !important; 
+
+}
+
+/* Cambiar color de los enlaces */
+.navbar.navbar-light .nav-link {
+  color: #ecf0f1; /* Gris claro */
+}
+
+/* Hover de los enlaces */
+.navbar.navbar-light .nav-link:hover {
+  color: #f39c12; /* Naranjo */
+}
+
+/* Enlace activo */
+.navbar.navbar-light .nav-item.active .nav-link {
+  color: #e74c3c; /* Rojo */
+}
+
+/* Ajustar márgenes y paddings de la navbar */
+.navbar .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar-brand {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Quitar padding interno forzado de la navbar */
+.navbar {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
