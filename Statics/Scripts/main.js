@@ -207,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <li class="nav-item"><a class="nav-link" href="DatosDeCompraMiTienda.html">Compra Aquí</a></li>
                     <li class="nav-item"><a class="nav-link" href="productosMiTienda.html">Nuestros Productos</a></li>
                     <li class="nav-item"><a class="nav-link" href="AboutUs.html">Sobre nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="registro.html">Registrate</a></li>
                 </ul>
             </div>
         </div>
