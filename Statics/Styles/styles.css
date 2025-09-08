@@ -229,3 +229,26 @@ input[type="submit"]:hover {
         }
 
 
+/* Estilos para el footer */
+footer {
+    background-color: #251940; /* mismo color que el body */
+    color: #ffffff; /* texto blanco */
+    border-top: 1px solid #4a3f6b;
+     margin-top: 80px;
+}
+
+
+footer a {
+    color: #ffffff; /* enlaces blancos */
+}
+
+footer a:hover {
+    color: #d1c0ff;
+}
+.carousel-img {
+  height: 400px;
+  width: 100%;
+  object-fit: contain;   
+  background-color: #251940; 
+}
+
