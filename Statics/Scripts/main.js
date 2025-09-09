@@ -1,4 +1,4 @@
-
+let Carrito = JSON.parse(sessionStorage.getItem("Carrito")) || [];
 const productos = {
   "Juegos de mesa": [
     { nombre: "Catan", precio: "$29.990 CLP", imagen: "https://www.catan.com/sites/default/files/2021-07/0001021_catan-25th-anniversary-edition.png", link: "DatosDeCompraMiTienda.html" },
@@ -57,7 +57,7 @@ function llenarSelectProductos(idSelect) {
   }
 }
 
-// --- Validaciones ---
+
 function validarFormulario(formId) {
   const form = document.getElementById(formId);
   if (!form) return;
@@ -67,42 +67,20 @@ function validarFormulario(formId) {
 
     const nombre = document.getElementById("nombre").value.trim();
     const email = document.getElementById("email").value.trim();
-    const producto = document.getElementById("producto").value;
 
-    // Validar nombre
     const regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     if (!regexNombre.test(nombre)) {
       alert("El nombre solo puede contener letras y espacios.");
       return;
     }
 
-    // Validar email
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regexEmail.test(email)) {
       alert("Por favor ingresa un correo válido.");
       return;
     }
 
-    // Validar producto
-    let valido = false;
-    for (const categoria in productos) {
-      if (productos[categoria].some(prod => prod.nombre === producto)) {
-        valido = true;
-        break;
-      }
-    }
-    if (!valido) {
-      alert("Selecciona un producto válido.");
-      return;
-    }
-
-    // Guardar datos en localStorage
-    localStorage.setItem("ultimoCliente", JSON.stringify({
-      nombre, email, producto
-    }));
-
-    alert("Compra realizada con éxito ✅");
-    form.submit();
+   alert("Registro realizado con éxito");
   });
 }
 
@@ -110,7 +88,7 @@ function cargarProductos(categoria) {
   const fila = document.getElementById("cardsRow");
   fila.innerHTML = ""; // solo limpiamos las cards
 
-  productos[categoria].forEach(prod => {
+  productos[categoria].forEach((prod,index) => {
     const col = document.createElement("div");
     col.className = "col-12 col-md-4";
 
@@ -120,7 +98,8 @@ function cargarProductos(categoria) {
     <div class="card-body text-center">
       <h5 class="card-title">${prod.nombre}</h5>
       <p class="card-text">${prod.precio}</p>
-      <a href="#" class="btn btn-primary" onclick='seleccionarProducto({nombre: "${prod.nombre}", precio: "${prod.precio}", link: "${prod.link}"})'>Comprar</a>
+       <a href="#" class="btn btn-primary" onclick="seleccionarProducto('${categoria}', ${index})">Agregar a carrito</a>
+            </div>
     </div>
   </div>
 `;
@@ -139,40 +118,80 @@ document.querySelectorAll("#categoriasDropdown .dropdown-item").forEach(item => 
     cargarProductos(categoria);
   });
 });
-function seleccionarProducto(prod) {
-    sessionStorage.setItem("productoSeleccionado", JSON.stringify(prod)); // Guardamos directamente el objeto
-    // Redirigir al formulario
-    window.location.href = "DatosDeCompraMiTienda.html";
+function seleccionarProducto(categoria, index) {
+    const prod = productos[categoria][index];
+    
+    // Buscar si ya existe en el carrito
+    const itemExistente = Carrito.find(item => item.nombre === prod.nombre);
+
+    if (itemExistente) {
+        itemExistente.cantidad = (itemExistente.cantidad || 1) + 1; // Incrementar cantidad
+    } else {
+        prod.cantidad = 1; // Inicializar cantidad
+        Carrito.push(prod);
+    }
+
+    sessionStorage.setItem("Carrito", JSON.stringify(Carrito));
+    console.log("Carrito actualizado:", Carrito);
+
+    
 }
+
 function prepararFormulario() {
-    const productoSelect = document.getElementById("producto");
-    if (!productoSelect) return; // Evita errores si no existe
 
-    // Limpiar opciones anteriores
-    productoSelect.innerHTML = '<option value="">-- Selecciona un producto --</option>';
-    Object.values(productos).forEach(listaProd => {
-        listaProd.forEach(prod => {
-            const option = document.createElement("option");
-            option.value = prod.nombre;
-            option.textContent = prod.nombre;
-            productoSelect.appendChild(option);
-        });
-    });
 
-    // Seleccionar producto previamente elegido, si existe
-    const prodSeleccionado = JSON.parse(sessionStorage.getItem("productoSeleccionado"));
+
+    Carrito = JSON.parse(sessionStorage.getItem("carrito"));
     if (prodSeleccionado) {
         productoSelect.value = prodSeleccionado.nombre;
     }
 }
+function renderCarrito() {
+    const container = document.getElementById("carritoItems");
+    container.innerHTML = ""; // Limpia el contenido antes de renderizar
 
+    Carrito.forEach((prod, index) => {
+        const card = document.createElement("div");
+        card.className = "card h-100 shadow-sm";
+        card.style.width = "18rem";
+        card.innerHTML = `
+            <img src="${prod.imagen}" class="card-img-top" alt="${prod.nombre}">
+            <div class="card-body text-center">
+                <h5 class="card-title">${prod.nombre}</h5>
+                <p class="card-text">$${prod.precio} </p>
+                <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                    <button class="btn btn-sm btn-danger" onclick="cambiarCantidad(${index}, -1)">-</button>
+                    <span>${prod.cantidad}</span>
+                    <button class="btn btn-sm btn-success" onclick="cambiarCantidad(${index}, 1)">+</button>
+                </div>
+                <button class="btn btn-outline-danger btn-sm" onclick="eliminarProducto(${index})">Eliminar</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function cambiarCantidad(index, valor) {
+    Carrito[index].cantidad += valor;
+    if (Carrito[index].cantidad < 1) Carrito[index].cantidad = 1;
+    sessionStorage.setItem("Carrito", JSON.stringify(Carrito)); 
+
+    renderCarrito();
+}
+
+function eliminarProducto(index) {
+    Carrito.splice(index, 1);
+    sessionStorage.setItem("Carrito", JSON.stringify(Carrito)); 
+
+    renderCarrito();
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const footer = document.getElementById("mainFooter");
     if (!footer) return;
 
     footer.innerHTML = `
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+
   <div class="container d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center">
       
@@ -185,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <li class="ms-3"><a class="text-white" href="#"><i class="bi bi-facebook"></i></a></li>
     </ul>
   </div>
-</footer>
+
 
     `;
     const header = document.getElementById("mainHeader");
@@ -204,9 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="paginaInicio.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="DatosDeCompraMiTienda.html">Compra Aquí</a></li>
                     <li class="nav-item"><a class="nav-link" href="productosMiTienda.html">Nuestros Productos</a></li>
                     <li class="nav-item"><a class="nav-link" href="AboutUs.html">Sobre nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Carro.html">Carrito</a></li>
+ <li class="nav-item"><a class="nav-link" href="Iniciar.html">Inicia sesion</a></li>
                     <li class="nav-item"><a class="nav-link" href="registro.html">Registrate</a></li>
                 </ul>
             </div>
@@ -231,11 +251,11 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarProductos("Juegos de mesa");
     }
 
-    if (page === "formulario") {
+    if (page === "Carrito") {
         // Manejo del formulario y producto seleccionado
-        prepararFormulario();
-        sessionStorage.setItem("productoSeleccionado", JSON.stringify(null));
-        validarFormulario("formCompra");
+
+        renderCarrito();
+
     }
 });
 
