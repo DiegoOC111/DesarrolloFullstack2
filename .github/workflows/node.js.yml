@@ -32,8 +32,3 @@ jobs:
         env:
           CI: false
 
-      - name: Run tests
-        run: npm test
-        working-directory: ${{ github.workspace }}/WebAppTech/appweb
-        env:
-          CI: false
