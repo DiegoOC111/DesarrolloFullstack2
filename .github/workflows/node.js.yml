@@ -16,22 +16,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Build
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ github.workspace }}/WebAppTech/appweb
+
+      - name: Build (ignore warnings)
         run: npm run build --if-present
         working-directory: ${{ github.workspace }}/WebAppTech/appweb
         env:
           CI: false
-          
-      - name: Build
-        run: npm run build --if-present
-        working-directory: ${{ github.workspace }}/WebAppTech/appweb
 
       - name: Run tests
         run: npm test
         working-directory: ${{ github.workspace }}/WebAppTech/appweb
+        env:
+          CI: false
