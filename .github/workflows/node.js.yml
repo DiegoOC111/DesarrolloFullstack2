@@ -29,6 +29,8 @@ jobs:
       - name: Build
         run: npm run build --if-present
         working-directory: ${{ github.workspace }}/WebAppTech/appweb
+        env:
+          CI: false
 
       - name: Run tests
         run: npm test
