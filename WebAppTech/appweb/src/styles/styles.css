@@ -6,12 +6,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-html, body {
+html, main {
   height: 100%;
   margin: 0;
 }
 
-body {
+main {
   display: flex;
   flex-direction: column;
   background-color: #251940;
@@ -138,12 +138,15 @@ input[type="submit"]:hover {
 }
 
 .card {
-  background-color: #583BBF;
+  background-color: #583BBF !important;
   color: #CAA9D9;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
-
+.card-body {
+  background-color: #583BBF; /* opcional si quieres continuidad */
+  color: #CAA9D9;
+}
 .card-title {
   color:#ecf0f1;
 }
@@ -186,12 +189,14 @@ input[type="submit"]:hover {
   margin: 20px auto;
   padding: 20px;
   border-radius: 15px;
+  background-color: #583BBF
 }
 
 .card-custom img {
   max-height: 300px;
   object-fit: cover;
   border-radius: 10px;
+  background-color: #583BBF
 }
 
 .card-custom .card-title {
