@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import  { useState, useEffect, useContext } from "react";
+import React from "react";
+
 import { CartContext } from "../components/CartContext"; 
 
 const productosData = {

@@ -4,7 +4,7 @@ import logo from "../assets/images/logo_pagina.png";
 
 export default function Header({ setPage }) {
   return (
-    <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light shadow-sm" data-testid="header">
       <div className="container-fluid">
         <a
           className="navbar-brand"

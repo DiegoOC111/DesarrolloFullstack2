@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import React from "react";
 export default function ProductList() {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState(() => {
@@ -8,7 +8,6 @@ export default function ProductList() {
   });
 
   useEffect(() => {
-    // Simular carga de productos desde JSON o API
     fetch("/data/productos.json")
       .then((res) => res.json())
       .then((data) => setProductos(data));

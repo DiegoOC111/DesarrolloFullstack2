@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function Carousel() {
   return (
     <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">

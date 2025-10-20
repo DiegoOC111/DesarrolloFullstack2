@@ -1,17 +1,17 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Header from "./Header";
-import logo from "../assets/images/logo_pagina.png"; // si necesitas validar src
+import logo from "../assets/images/logo_pagina.png"; 
 
 describe("Header Component", () => {
-  let setPageMock;
+  let setPageSpy;
 
   beforeEach(() => {
-    setPageMock = jest.fn();
+    setPageSpy = jasmine.createSpy("setPage");
   });
 
   it("debe renderizar el navbar y el logo", () => {
-    render(<Header setPage={setPageMock} />);
+    render(<Header setPage={setPageSpy} />);
     const navbar = document.querySelector(".navbar");
     expect(navbar).toBeTruthy();
 
@@ -21,7 +21,7 @@ describe("Header Component", () => {
   });
 
   it("cada enlace llama a setPage con la página correcta", () => {
-    render(<Header setPage={setPageMock} />);
+    render(<Header setPage={setPageSpy} />);
 
     const links = [
       { text: "Home", page: "home" },
@@ -35,14 +35,14 @@ describe("Header Component", () => {
     links.forEach(({ text, page }) => {
       const link = screen.getByText(text);
       fireEvent.click(link);
-      expect(setPageMock).toHaveBeenLastCalledWith(page);
+      expect(setPageSpy).toHaveBeenCalledWith(page);
     });
   });
 
   it("click en el logo llama a setPage con 'home'", () => {
-    render(<Header setPage={setPageMock} />);
+    render(<Header setPage={setPageSpy} />);
     const logoLink = screen.getByAltText("Logo de la tienda").closest("a");
     fireEvent.click(logoLink);
-    expect(setPageMock).toHaveBeenCalledWith("home");
+    expect(setPageSpy).toHaveBeenCalledWith("home");
   });
 });
