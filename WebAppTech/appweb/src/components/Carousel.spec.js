@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Carousel from '../components/Carousel'; // ajusta la ruta según tu estructura
+import Carousel from './Carousel';
 
 describe('Carousel Component', () => {
   describe('Renderizado básico', () => {

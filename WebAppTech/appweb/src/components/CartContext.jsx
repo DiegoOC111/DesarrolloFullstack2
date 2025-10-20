@@ -1,4 +1,5 @@
-import React, { createContext, useState } from "react";
+import React from "react"
+import  { createContext, useState } from "react";
 
 const CartContext = createContext();
 
@@ -24,7 +25,6 @@ export default function CartProvider({ children }) {
     setCart((prev) => prev.filter((p) => p.nombre !== nombre));
   };
 
-  // Cambiar cantidad (+1 o -1)
   const updateCantidad = (nombre, delta) => {
     setCart((prev) =>
       prev
@@ -35,16 +35,15 @@ export default function CartProvider({ children }) {
     );
   };
 
-  // Vaciar carrito (opcional)
   const clearCart = () => setCart([]);
 
-  return (
-    <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateCantidad, clearCart }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+return (
+  <CartContext.Provider
+    value={{ cart, addToCart, removeFromCart, updateCantidad, clearCart }}
+  >
+    <div data-testid="cart">{children}</div>
+  </CartContext.Provider>
+);
 }
 
 export { CartContext };

@@ -16,7 +16,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "karma start --single-run --browsers ChromeHeadless",
+    "test:watch": "karma start --browsers Chrome",
+    "test:ci": "karma start --single-run --browsers ChromeHeadlessCI",
+    "test:coverage": "karma start --single-run --browsers ChromeHeadless --reporters coverage",
+    "test:debug": "karma start --browsers Chrome --reporters progress --single-run=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -42,12 +46,23 @@
     "@babel/preset-react": "^7.27.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "file-loader": "^6.2.0",
     "jasmine-core": "^5.12.0",
     "karma": "^6.4.4",
     "karma-babel-preprocessor": "^8.0.2",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
-    "karma-webpack": "^5.0.1"
-  }
+    "karma-webpack": "^5.0.1",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "karma.conf.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
