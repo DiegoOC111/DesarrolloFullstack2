@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom"; // <-- SOLUCIÓN: Importa los matchers de extensión
+import "@testing-library/jest-dom"; 
 import React from "react";
 import Carrito from "../pages/Carrito"; 
 
