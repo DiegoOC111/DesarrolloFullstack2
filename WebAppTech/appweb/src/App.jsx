@@ -12,19 +12,18 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./styles/styles.css";
 
 import CartProvider from "./components/CartContext"; 
-
-export default function App() {
-  const [page, setPage] = useState("home");
+export default function App({ initialPage = "home" }) {
+  const [page, setPage] = useState(initialPage); 
 
   let content;
   switch (page) {
-    case "home": content = <Home />; break;
-    case "productos": content = <Products />; break;
-    case "aboutus": content = <AboutUs />; break;
-    case "carrito": content = <Carrito />; break;
-    case "login": content = <Login />; break;
-    case "registro": content = <Registro />; break;
-    default: content = <Home />;
+   case "home": content = <Home data-testid="home" />; break;
+    case "productos": content = <Products data-testid="productos" />; break;
+    case "aboutus": content = <AboutUs data-testid="aboutus" />; break;
+    case "carrito": content = <Carrito data-testid="carrito" />; break;
+    case "login": content = <Login data-testid="login" />; break;
+    case "registro": content = <Registro data-testid="registro" />; break;
+    default: content = <Home data-testid="home" />;
   }
 
   return (

@@ -4,7 +4,7 @@ import img from "../assets/images/Imagen del equipo.png";
 
 export default function About() {
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" data-testid="aboutus">
       <div className="card card-custom shadow-sm mb-4">
         <img 
           src= {img}
