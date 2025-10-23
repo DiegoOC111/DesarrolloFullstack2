@@ -21,7 +21,7 @@ export default function Registro() {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100" data-page="formulario">
+    <div className="d-flex flex-column min-vh-100" data-page="formulario" data-testid="registro">
 
         <div
           className="Flex_Container"

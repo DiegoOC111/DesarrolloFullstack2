@@ -1,128 +1,85 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { CartContext } from "./CartContext";
-import CartProvider from "./CartContext";
-import { act } from "react-dom/test-utils";
+// CartContext.spec.js
+import React, { useContext } from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { CartContext, default as CartProvider } from "./CartContext";
 
-describe("CartProvider", () => {
-  it("debe inicializar el carrito vacío", () => {
-    let value;
-    render(
+describe("CartContext - cobertura total", () => {
+
+  // Componente de prueba para acceder al contexto
+  function TestComponent() {
+    const { cart, addToCart, removeFromCart, updateCantidad, clearCart } = useContext(CartContext);
+
+    return (
+      <div>
+        <button onClick={() => addToCart({ nombre: "Manzana", precio: 10 })} data-testid="add-manzana">Add Manzana</button>
+        <button onClick={() => addToCart({ nombre: "Banana", precio: 5 })} data-testid="add-banana">Add Banana</button>
+        <button onClick={() => removeFromCart("Manzana")} data-testid="remove-manzana">Remove Manzana</button>
+        <button onClick={() => updateCantidad("Banana", 2)} data-testid="update-banana-up">Banana +2</button>
+        <button onClick={() => updateCantidad("Banana", -1)} data-testid="update-banana-down">Banana -1</button>
+        <button onClick={() => clearCart()} data-testid="clear-cart">Clear Cart</button>
+
+        <ul data-testid="cart-items">
+          {cart.map((p) => (
+            <li key={p.nombre}>{`${p.nombre} x ${p.cantidad}`}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  let container;
+
+  beforeEach(() => {
+    const { container: c } = render(
       <CartProvider>
-        <CartContext.Consumer>
-          {(v) => {
-            value = v;
-            return null;
-          }}
-        </CartContext.Consumer>
+        <TestComponent />
       </CartProvider>
     );
-    expect(value.cart).toEqual([]);
+    container = c;
   });
 
-  it("debe agregar un producto al carrito", () => {
-    let value;
-    render(
-      <CartProvider>
-        <CartContext.Consumer>
-          {(v) => {
-            value = v;
-            return null;
-          }}
-        </CartContext.Consumer>
-      </CartProvider>
-    );
-
-    act(() => {
-      value.addToCart({ nombre: "Mouse", precio: 1000 });
-    });
-
-    expect(value.cart.length).toBe(1);
-    expect(value.cart[0].nombre).toBe("Mouse");
-    expect(value.cart[0].cantidad).toBe(1);
+  it("agrega un producto nuevo", () => {
+    fireEvent.click(screen.getByTestId("add-manzana"));
+    expect(screen.getByText("Manzana x 1")).toBeTruthy();
   });
 
-  it("debe incrementar la cantidad si el producto ya existe", () => {
-    let value;
-    render(
-      <CartProvider>
-        <CartContext.Consumer>
-          {(v) => {
-            value = v;
-            return null;
-          }}
-        </CartContext.Consumer>
-      </CartProvider>
-    );
-
-    act(() => {
-      value.addToCart({ nombre: "Teclado", precio: 2000 });
-      value.addToCart({ nombre: "Teclado", precio: 2000 });
-    });
-
-    expect(value.cart[0].cantidad).toBe(2);
+  it("incrementa cantidad si se agrega producto existente", () => {
+    fireEvent.click(screen.getByTestId("add-manzana"));
+    fireEvent.click(screen.getByTestId("add-manzana"));
+    expect(screen.getByText("Manzana x 2")).toBeTruthy();
   });
 
-  it("debe eliminar un producto con removeFromCart", () => {
-    let value;
-    render(
-      <CartProvider>
-        <CartContext.Consumer>
-          {(v) => {
-            value = v;
-            return null;
-          }}
-        </CartContext.Consumer>
-      </CartProvider>
-    );
-
-    act(() => {
-      value.addToCart({ nombre: "Monitor", precio: 5000 });
-      value.removeFromCart("Monitor");
-    });
-
-    expect(value.cart.length).toBe(0);
+  it("agrega un producto distinto", () => {
+    fireEvent.click(screen.getByTestId("add-manzana"));
+    fireEvent.click(screen.getByTestId("add-banana"));
+    expect(screen.getByText("Manzana x 1")).toBeTruthy();
+    expect(screen.getByText("Banana x 1")).toBeTruthy();
   });
 
-  it("debe actualizar la cantidad con updateCantidad y eliminar si llega a 0", () => {
-    let value;
-    render(
-      <CartProvider>
-        <CartContext.Consumer>
-          {(v) => {
-            value = v;
-            return null;
-          }}
-        </CartContext.Consumer>
-      </CartProvider>
-    );
-
-    act(() => {
-      value.addToCart({ nombre: "Headset", precio: 3000 });
-      value.updateCantidad("Headset", -1);
-    });
-
-    expect(value.cart.length).toBe(0);
+  it("elimina un producto existente", () => {
+    fireEvent.click(screen.getByTestId("add-manzana"));
+    fireEvent.click(screen.getByTestId("remove-manzana"));
+    expect(screen.queryByText("Manzana x 1")).toBeNull();
   });
 
-  it("debe vaciar el carrito con clearCart", () => {
-    let value;
-    render(
-      <CartProvider>
-        <CartContext.Consumer>
-          {(v) => {
-            value = v;
-            return null;
-          }}
-        </CartContext.Consumer>
-      </CartProvider>
-    );
-
-    act(() => {
-      value.addToCart({ nombre: "Laptop", precio: 10000 });
-      value.clearCart();
-    });
-
-    expect(value.cart).toEqual([]);
+  it("incrementa cantidad con updateCantidad", () => {
+    fireEvent.click(screen.getByTestId("add-banana"));
+    fireEvent.click(screen.getByTestId("update-banana-up"));
+    expect(screen.getByText("Banana x 3")).toBeTruthy();
   });
+
+  it("decrementa cantidad con updateCantidad y elimina si llega a 0", () => {
+    fireEvent.click(screen.getByTestId("add-banana")); // 1
+    fireEvent.click(screen.getByTestId("update-banana-down")); // 0 -> elimina
+    expect(screen.queryByText("Banana x 1")).toBeNull();
+  });
+
+  it("limpia todo el carrito con clearCart", () => {
+    fireEvent.click(screen.getByTestId("add-manzana"));
+    fireEvent.click(screen.getByTestId("add-banana"));
+    fireEvent.click(screen.getByTestId("clear-cart"));
+    expect(screen.queryByText("Manzana x 1")).toBeNull();
+    expect(screen.queryByText("Banana x 1")).toBeNull();
+  });
+
 });

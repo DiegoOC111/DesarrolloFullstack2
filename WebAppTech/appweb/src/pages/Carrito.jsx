@@ -30,7 +30,7 @@ export default function Carrito() {
   };
 
   return (
-    <div id="ContenedorCarrito" className="container py-4">
+    <div id="ContenedorCarrito" className="container py-4"data-testid="carrito">
       <div className="carritoContainer">
         <h1 className="mb-4 text-center">Carrito de Compras</h1>
         <div id="carritoItems" className="row g-3 justify-content-center">

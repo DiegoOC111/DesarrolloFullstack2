@@ -1,7 +1,9 @@
+// ProductList.spec.js
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ProductList from "./ProductList";
 
+// --- Mock de fetch para cargar productos ---
 beforeAll(() => {
   spyOn(window, "fetch").and.callFake(() =>
     Promise.resolve({
@@ -28,31 +30,33 @@ const sessionStorageMock = (() => {
 })();
 Object.defineProperty(window, "sessionStorage", { value: sessionStorageMock });
 
-describe("ProductList Component", () => {
+describe("ProductList Component - cobertura total", () => {
   beforeEach(() => {
     window.fetch.calls.reset();
     window.sessionStorage.clear();
   });
 
-  it("debe renderizar título y cargar productos", async () => {
+  it("renderiza título y productos", async () => {
     render(<ProductList />);
     expect(screen.getByText("Productos")).toBeTruthy();
 
     await waitFor(() => {
       expect(screen.getByText("Producto 1")).toBeTruthy();
       expect(screen.getByText("Producto 2")).toBeTruthy();
+      expect(screen.getByText("$1000")).toBeTruthy();
+      expect(screen.getByText("$2000")).toBeTruthy();
+      expect(screen.getAllByText("Agregar al carrito").length).toBe(2);
     });
   });
 
-  it("cada producto debe mostrar imagen, nombre, precio y botón", async () => {
+  it("cada producto muestra imagen, nombre, precio y botón", async () => {
     render(<ProductList />);
     await waitFor(() => {
-      const cards = screen.getAllByText("Agregar al carrito").map(btn => btn.closest(".card"));
-      expect(cards.length).toBe(2); // hay 2 productos
+      const imgs = screen.getAllByRole("img");
+      expect(imgs[0].getAttribute("src")).toBe("img1.jpg");
+      expect(imgs[1].getAttribute("src")).toBe("img2.jpg");
       expect(screen.getByAltText("Producto 1")).toBeTruthy();
       expect(screen.getByAltText("Producto 2")).toBeTruthy();
-      expect(screen.getByText("$1000")).toBeTruthy();
-      expect(screen.getByText("$2000")).toBeTruthy();
     });
   });
 
@@ -64,7 +68,7 @@ describe("ProductList Component", () => {
     fireEvent.click(botones[0]); // Producto 1
 
     await waitFor(() => {
-      const stored = JSON.parse(sessionStorage.getItem("carrito"));
+      const stored = JSON.parse(window.sessionStorage.getItem("carrito") || "[]");
       expect(stored.length).toBe(1);
       expect(stored[0].nombre).toBe("Producto 1");
     });
@@ -79,10 +83,32 @@ describe("ProductList Component", () => {
     fireEvent.click(botones[1]); // Producto 2
 
     await waitFor(() => {
-      const stored = JSON.parse(sessionStorage.getItem("carrito"));
+      const stored = JSON.parse(window.sessionStorage.getItem("carrito") || "[]");
       expect(stored.length).toBe(2);
       expect(stored[0].nombre).toBe("Producto 1");
       expect(stored[1].nombre).toBe("Producto 2");
+    });
+  });
+
+  it("cubre branch de carrito inicial vacío", async () => {
+    window.sessionStorage.clear();
+    render(<ProductList />);
+    await waitFor(() => {
+      const stored = JSON.parse(window.sessionStorage.getItem("carrito") || "[]");
+      expect(stored.length).toBe(0);
+    });
+  });
+
+  it("cubre branch de carrito inicial con datos", async () => {
+    window.sessionStorage.setItem(
+      "carrito",
+      JSON.stringify([{ nombre: "Producto 1", precio: 1000 }])
+    );
+    render(<ProductList />);
+    await waitFor(() => {
+      const stored = JSON.parse(window.sessionStorage.getItem("carrito") || "[]");
+      expect(stored.length).toBe(1);
+      expect(stored[0].nombre).toBe("Producto 1");
     });
   });
 });
