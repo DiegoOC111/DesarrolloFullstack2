@@ -2,7 +2,7 @@ import axios from "axios"
 
 class ApiService {
   puerto = 8080
-  enlace = `http://localhost:${this.puerto}`
+  enlace = `http://13.59.58.161:${this.puerto}`
   TOKEN_KEY = "auth_token"
   EXP_KEY = "auth_token_exp"
 

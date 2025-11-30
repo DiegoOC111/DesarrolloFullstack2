@@ -25,14 +25,7 @@ export default function Carrito() {
     cargarDespachos();
   }, [api]);
 
-  // ============================================================
-  // 🛠️ HELPER: FUNCIÓN PARA OBTENER EL PRECIO SEGURO
-  // ============================================================
-  // Esta función evita el NaN. Busca el precio en este orden:
-  // 1. precioTotal (El ideal)
-  // 2. precioBruto * 1.19 (Calculado)
-  // 3. precio (Genérico)
-  // 4. 0 (Si todo falla)
+  
   const obtenerPrecio = (prod) => {
     if (prod.precioTotal != null) return Number(prod.precioTotal);
     if (prod.precioBruto != null) {
@@ -52,12 +45,13 @@ export default function Carrito() {
     removeFromCart(id);
   };
 
-  const comprarCarrito = async () => {
+const comprarCarrito = async () => {
+    // 1. Validaciones
     if (cart.length === 0) return alert("El carrito está vacío.");
     
     if (!isLoggedIn) {
       alert("Debes iniciar sesión para completar la compra.");
-      return ;
+      return; // O redirigir
     }
     
     if (!selectedDespacho) return alert("Por favor selecciona un método de despacho.");
@@ -65,24 +59,37 @@ export default function Carrito() {
     setIsProcessing(true);
 
     try {
-      // Usamos el helper obtenerPrecio para calcular los totales de la boleta
-      const totalFinal = cart.reduce((acc, item) => acc + (obtenerPrecio(item) * item.cantidad), 0);
+      // 2. CÁLCULOS MATEMÁTICOS SEGUROS
       
-      // Calculamos bruto e impuestos inversamente si es necesario, o sumamos propiedades
-      const totalBruto = cart.reduce((acc, item) => acc + (Number(item.precioBruto || 0) * item.cantidad), 0);
-      const totalImpuestos = totalFinal - totalBruto; // Diferencia simple
+      // A. Calcular el TOTAL FINAL sumando lo que vale cada item
+      // Nos aseguramos de usar precioTotal, o precio, o calcularlo.
+      const totalFinalCalculado = cart.reduce((acc, item) => {
+         // Prioridad: precioTotal -> precio -> precioBruto * 1.19 -> 0
+         const precioUnitario = Number(item.precioTotal) || Number(item.precio) || (Number(item.precioBruto) * 1.19) || 0;
+         return acc + (precioUnitario * item.cantidad);
+      }, 0);
 
+      // B. Calcular el BRUTO (Neto) dividiendo por 1.19 (IVA Chile)
+      const totalBrutoCalculado = Math.round(totalFinalCalculado / 1.19);
+
+      // C. Calcular el IMPUESTO por diferencia (para que la suma sea exacta)
+      const totalImpuestosCalculado = totalFinalCalculado - totalBrutoCalculado;
+
+      // 3. Preparar el Payload
       const boletaPayload = {
-        totalBruto: Math.round(totalBruto),
-        totalImpuestos: Math.round(totalImpuestos),
-        total: Math.round(totalFinal),
+        totalBruto: totalBrutoCalculado,
+        totalImpuestos: totalImpuestosCalculado,
+        total: Math.round(totalFinalCalculado),
         usuarioIdUsuario: user.id || user.sub,
         idDespacho: Number(selectedDespacho)
       };
 
-      const boletaCreada = await api.crearBoleta(boletaPayload);
-      console.log("Boleta creada ID:", boletaCreada.id);
+      console.log("Enviando Boleta:", boletaPayload); // Para depurar en consola
 
+      // 4. Crear Boleta
+      const boletaCreada = await api.crearBoleta(boletaPayload);
+      
+      // 5. Crear Detalles
       for (const item of cart) {
         if (!item.id) continue;
 
@@ -91,6 +98,7 @@ export default function Carrito() {
           idProducto: item.id
         };
 
+        // Bucle por cantidad (mientras backend no soporte campo cantidad)
         for(let i=0; i < item.cantidad; i++) {
              await api.crearDetalleBoleta(detallePayload);
         }
@@ -98,7 +106,7 @@ export default function Carrito() {
 
       alert(`¡Compra realizada con éxito! Orden #${boletaCreada.id}`);
       clearCart();
-   
+      // setPage("home"); // Si usas setPage
 
     } catch (error) {
       console.error("Error en la compra:", error);
@@ -206,7 +214,7 @@ export default function Carrito() {
           </div>
         ) : (
             <div className="text-center mt-5 py-5">
-                <h3 className="text-muted mb-3">Tu carrito está vacío 🛒</h3>
+                <h3 className="text-muted mb-3">Tu carrito está vacío </h3>
                 
             </div>
         )}

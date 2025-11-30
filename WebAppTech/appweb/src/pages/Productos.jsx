@@ -146,7 +146,7 @@ const productosFiltrados =
               <img src={p.imagenUrl} className="card-img-top" alt={p.nombre} />
               <div className="card-body text-center">
                 <h5 className="card-title">{p.nombre}</h5>
-                <p className="card-text">  ${Number(p.precioBruto).toLocaleString("es-CL")} CLP</p>
+                <p className="card-text">  ${Number(p.precioTotal).toLocaleString("es-CL")} CLP</p>
                 <button className="btn btn-warning" onClick={() => agregarAlCarrito(p)}>
                   Agregar al carrito
                 </button>
