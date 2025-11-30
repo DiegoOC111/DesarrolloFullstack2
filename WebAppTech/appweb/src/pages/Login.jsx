@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import { useApi } from "../services/ApiProvider";
+import { useUser } from "../services/UserProvider";
+
+
 export default function Login() {
-  const validarFormulario = (event) => {
+  const [loading, setLoading] = useState(false);
+  const api = useApi(); 
+  const { login } = useUser();
+  const validarFormulario = async (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value.trim();
@@ -11,46 +18,46 @@ export default function Login() {
       return;
     }
 
-    alert(`Inicio de sesión exitoso para: ${email}`);
+    setLoading(true);
+    try {
+      // Usando tu clase API
+      const data = await api.login({
+        correo: email,
+        password: contrasena
+      });
+
+      if (data.token) {
+        login(data.token);
+        alert(`Inicio de sesión exitoso para: ${email}`);
+        
+      } else {
+        alert("Credenciales incorrectas");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Ocurrió un error al iniciar sesión");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100" data-page="formulario"data-testid="login">
-        <div
-          className="Flex_Container"
-          style={{ marginTop: "-50px" }}
-          id="Contenedorinicio"
-        >
-          <form
-            id="Form_inicio"
-            className="Form_inicio"
-            onSubmit={validarFormulario}
-          >
-            <h1 style={{ textAlign: "center", color: "white" }}>
-              Formulario de inicio de sesión
-            </h1>
+    <div className="d-flex flex-column min-vh-100" data-page="formulario" data-testid="login">
+      <div className="Flex_Container" style={{ marginTop: "-50px" }} id="Contenedorinicio">
+        <form id="Form_inicio" className="Form_inicio" onSubmit={validarFormulario}>
+          <h1 style={{ textAlign: "center", color: "white" }}>Formulario de inicio de sesión</h1>
 
-            <label htmlFor="email" className="Label_Form">
-              Correo:
-            </label>
-            <br />
-            <input type="email" id="email" name="email" />
-            <br />
-            <br />
+          <label htmlFor="email" className="Label_Form">Correo:</label>
+          <input type="email" id="email" name="email" />
 
-            <label htmlFor="Contrasena" className="Label_Form">
-              Password:
-            </label>
-            <br />
-            <input type="password" id="Contrasena" name="Contrasena" />
-            <br />
-            <br />
+          <label htmlFor="Contrasena" className="Label_Form">Password:</label>
+          <input type="password" id="Contrasena" name="Contrasena" />
 
-            <input type="submit" value="Registrar" />
-            <br />
-            <br />
-          </form>
-        </div>
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? "Iniciando..." : "Iniciar sesión"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
