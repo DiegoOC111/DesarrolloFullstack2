@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useApi } from "../services/ApiProvider";
-
+import { useUser } from "../services/UserProvider";
 
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const api = useApi(); 
-
+  const { login } = useUser();
   const validarFormulario = async (event) => {
     event.preventDefault();
     const form = event.target;
@@ -27,9 +27,9 @@ export default function Login() {
       });
 
       if (data.token) {
+        login(data.token);
         alert(`Inicio de sesión exitoso para: ${email}`);
-        // aquí podrías redirigir o guardar token en localStorage
-        // localStorage.setItem("token", data.token);
+        
       } else {
         alert("Credenciales incorrectas");
       }

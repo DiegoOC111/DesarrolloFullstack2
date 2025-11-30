@@ -238,5 +238,28 @@ class ApiService {
   eliminarBoleta(id) {
     return this.delete(`/boletas/${id}`)
   }
+  // ==========================
+  // TIPOS DE DESPACHO
+  // ==========================
+  getTiposDespacho() {
+    return this.get("/tipos-despacho");
+  }
+
+  getTipoDespachoById(id) {
+    return this.get(`/tipos-despacho/${id}`);
+  }
+
+  crearTipoDespacho(data) {
+    return this.post("/tipos-despacho", data);
+  }
+
+  actualizarTipoDespacho(id, data) {
+    return this.put(`/tipos-despacho/${id}`, data);
+  }
+
+  eliminarTipoDespacho(id) {
+    return this.delete(`/tipos-despacho/${id}`);
+  }
+
 }
 export default ApiService
