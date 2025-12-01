@@ -34,18 +34,19 @@ export default function UsuariosTab() {
       cargarUsuarios();
       alert(isEditing ? "Usuario actualizado" : "Usuario creado");
     } catch (error) {
+      console.error("Error guardando usuario", error);
       alert("Error al guardar usuario");
     }
   };
 
   const limpiarFormulario = () => {
-    setForm({ id: "", correo: "", password: "", role: "USER" });
+    setForm({ id: 0, correo: "", password: "", role: "USER" });
     setIsEditing(false);
   };
 
   const handleEdit = (user) => {
     setForm({ 
-        id: user.id, 
+        id: user.id,
         correo: user.correo, 
         password: "", 
         role: user.rol || "USER" 

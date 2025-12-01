@@ -91,6 +91,36 @@ handleError(error, method, url) {
     }
   }
 
+  async post(url, data) {
+    try {
+      console.log("POST", url);
+      const res = await this.api.post(url, data);
+      return res.data;
+    } catch (error) {
+      this.handleError(error, "POST", url);
+    }
+  }
+
+  async put(url, data) {
+    try {
+      console.log("PUT", url);
+      const res = await this.api.put(url, data);
+      return res.data;
+    } catch (error) {
+      this.handleError(error, "PUT", url);
+    }
+  }
+
+  async delete(url) {
+    try {
+      console.log("DELETE", url);
+      const res = await this.api.delete(url);
+      return res.data;
+    } catch (error) {
+      this.handleError(error, "DELETE", url);
+    }
+  }
+
   // ==========================
   // AUTH
   // ==========================
