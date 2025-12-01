@@ -14,9 +14,7 @@ export default function AdminPanel() {
     <div className="container my-5">
       <h2 className="mb-4 fw-bold text-primary">Panel de Administración</h2>
       
-      {/* Navegación de Pestañas */}
       <ul className="nav nav-tabs mb-4">
-        {/* ... (Pestañas existentes: usuarios, productos, tipos) ... */}
         <li className="nav-item">
           <button className={`nav-link ${activeTab === "usuarios" ? "active fw-bold" : ""}`} onClick={() => setActiveTab("usuarios")}>👥 Usuarios</button>
         </li>
@@ -31,7 +29,7 @@ export default function AdminPanel() {
         </li>
         <li className="nav-item">
           <button className={`nav-link ${activeTab === "detalles" ? "active fw-bold" : ""}`} onClick={() => setActiveTab("detalles")}>
-            📑 Detalle Boletas  {/* 👈 NUEVA PESTAÑA */}
+            📑 Detalle Boletas  
           </button>
         </li>
         <li className="nav-item">
@@ -39,7 +37,6 @@ export default function AdminPanel() {
         </li>
       </ul>
 
-      {/* Contenido Dinámico */}
       <div className="card shadow-sm border-0">
         <div className="card-body">
           {activeTab === "usuarios" && <UsuariosTab />}

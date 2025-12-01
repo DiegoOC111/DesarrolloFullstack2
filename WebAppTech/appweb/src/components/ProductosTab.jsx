@@ -9,7 +9,6 @@ export default function ProductosTab() {
   const [productos, setProductos] = useState([]);
   const [tipos, setTipos] = useState([]);
   
-  // Modelo inicial
   const initialState = { id: "", nombre: "", descripcion: "", imagenUrl: "", precioBruto: "", stock: "", id_tipo: "" };
   const [form, setForm] = useState(initialState);
   const [isEditing, setIsEditing] = useState(false);
@@ -27,7 +26,6 @@ export default function ProductosTab() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Cálculos automáticos (IVA 19%)
       const pBruto = Number(form.precioBruto);
       const impuestos = Math.round(pBruto * 0.19);
       const pTotal = pBruto + impuestos;
@@ -53,18 +51,22 @@ export default function ProductosTab() {
   };
 
   const handleEdit = (p) => {
+    try { 
     setForm({ 
         id: p.id, nombre: p.nombre, descripcion: p.descripcion || "", imagenUrl: p.imagenUrl || "",
         precioBruto: p.precioBruto, stock: p.stock, id_tipo: p.idProd?.id || "" 
     });
-    setIsEditing(true);
+    setIsEditing(true);}
+    catch (error) { alert("Error al cargar datos del producto"); }
   };
 
   const handleDelete = async (id) => {
+    try {
     if (window.confirm("¿Borrar producto?")) {
+      console.log("Borrando producto ID:", id);
       await api.eliminarProducto(id);
       cargarDatos();
-    }
+    }} catch (error) { alert("Error borrando producto"); }
   };
 
   return (

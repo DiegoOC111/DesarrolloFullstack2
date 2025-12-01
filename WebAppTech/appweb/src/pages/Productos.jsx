@@ -30,57 +30,52 @@ export default function Productos() {
  const api = useApi();
  const { addToCart } = useContext(CartContext);
 
-// Traer categorías desde API
 useEffect(() => {
  const fetchCategorias = async () => {
       setLoading(true); // Iniciar carga
  try {
- // CORRECCIÓN 1: 'res' ya es el array de datos, NO necesitas 'res.data'
  const categoriasArray = await api.getTiposProducto(); 
  
-        // CORRECCIÓN 2: El 'res' puede ser undefined si falló la petición (CORS o Red)
-        // Usamos la comprobación y mapeamos directamente
+
         if (categoriasArray && Array.isArray(categoriasArray)) {
-            // CORRECCIÓN 3: Corregir error de variable en console.log
             const categoriasApi = categoriasArray.map(c => c.nombre); 
             console.log("Categorías cargadas:", categoriasApi); 
             setCategorias(["Todos", ...categoriasApi]);
         }
 } catch (error) {
  console.error("Error al obtener categorías:", error);
-        // Notificar al usuario sobre el error de CORS/Red
         toast.error("Error de conexión al cargar categorías. Revisa tu backend (CORS/Puerto 8080).", { autoClose: 5000 });
  }
  };
 
  fetchCategorias();
- }, [api]); // Dependencia 'api' es correcta ya que viene del contexto
+ }, [api]); 
 
-// Traer productos desde API
+
 useEffect(() => {
  const fetchProductos = async () => {
  try {
-// CORRECCIÓN 1: 'res' ya es el array de datos, NO necesitas 'res.data'
+
  const productosArray = await api.getProductos();
         
-        // CORRECCIÓN 2: Asegurarse de que el array exista antes de guardarlo
+
         if (productosArray && Array.isArray(productosArray)) {
 setProductos(productosArray);
         } else {
-            setProductos([]); // Establecer un array vacío si la respuesta no es un array válido
+            setProductos([]); 
         }
  } catch (error) {
  console.error("Error al obtener productos:", error);
         toast.error("Error de conexión al cargar productos. Revisa tu backend (CORS/Puerto 8080).", { autoClose: 5000 });
  } finally {
-          setLoading(false); // Finalizar carga
+          setLoading(false);
       }
 };
 
  fetchProductos();
- }, [api]); // Dependencia 'api' es correcta
+ }, [api]); 
 
-// Filtrado por categoría
+
 console.log("productos:", productos);
 const productosFiltrados =
  categoria === "Todos"
@@ -89,11 +84,9 @@ const productosFiltrados =
 
  const agregarAlCarrito = (producto) => {
  addToCart(producto);
- // REGLA IMPORTANTE: No usar alert(). Usamos Toastify o un componente modal.
     toast.success(`${producto.nombre} se ha agregado al carrito!`, { autoClose: 2000 });
  };
     
-  // Mostrar estado de carga
   if (loading) {
       return (
           <div className="container mt-5 text-center p-5">
