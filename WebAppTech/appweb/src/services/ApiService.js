@@ -59,25 +59,36 @@ class ApiService {
   // ==========================
   // HELPERS (ASYNC)
   // ==========================
+handleError(error, method, url) {
+    console.error(`Error en ${method} ${url}:`, error);
+    
+    // Si el error viene de la respuesta del servidor (ej: 400, 403, 500)
+    if (error.response) {
+        console.error("Datos del error:", error.response.data);
+        console.error("Status:", error.response.status);
+        // Opcional: Podrías lanzar solo el mensaje del backend
+        // throw error.response.data; 
+    } else if (error.request) {
+        // La petición se hizo pero no hubo respuesta (Error de red / Backend caído)
+        console.error("No se recibió respuesta del servidor (Network Error)");
+    } else {
+        // Error al configurar la petición
+        console.error("Error de configuración:", error.message);
+    }
+
+    // ⚠️ IMPORTANTE: Re-lanzamos el error.
+    // Si no hacemos 'throw', el componente pensará que todo salió bien y recibirá 'undefined'.
+    throw error; 
+  }
+
   async get(url) {
-    console.log("GET", url) 
-    const res = await this.api.get(url)
-    return res.data
-  }
-
-  async post(url, data = {}) {
-    const res = await this.api.post(url, data)
-    return res.data
-  }
-
-  async put(url, data = {}) {
-    const res = await this.api.put(url, data)
-    return res.data
-  }
-
-  async delete(url) {
-    const res = await this.api.delete(url)
-    return res.data
+    try {
+      console.log("GET", url); 
+      const res = await this.api.get(url);
+      return res.data;
+    } catch (error) {
+      this.handleError(error, "GET", url);
+    }
   }
 
   // ==========================

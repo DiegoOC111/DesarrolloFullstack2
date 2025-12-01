@@ -63,13 +63,11 @@ export default function UsuariosTab() {
   return (
     <div>
 <form onSubmit={handleSubmit} className="row g-3 mb-5 p-3 bg-light rounded shadow-sm">
-  {/* Título */}
   <div className="col-12">
     <h4 className="mb-2">{isEditing ? "Editar Usuario" : "Nuevo Usuario"}</h4>
   </div>
 
-  {/* --- FILA DE INPUTS --- */}
-  {/* Repartimos las 12 columnas entre los 3 campos (4 cada uno) */}
+
   
   <div className="col-md-4">
     <label className="form-label visually-hidden">Correo</label>
