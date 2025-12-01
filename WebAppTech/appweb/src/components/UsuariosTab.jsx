@@ -40,7 +40,7 @@ export default function UsuariosTab() {
   };
 
   const limpiarFormulario = () => {
-    setForm({  correo: "", password: "", role: "USER" });
+    setForm({ id: 0, correo: "", password: "", role: "USER" });
     setIsEditing(false);
   };
 
