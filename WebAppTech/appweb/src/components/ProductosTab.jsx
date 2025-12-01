@@ -99,7 +99,7 @@ export default function ProductosTab() {
           {productos.map((p) => (
             <tr key={p.id}>
               <td>
-                <img src={p.imagenUrl} alt="mini" style={{width: "40px", height: "40px", objectFit: "cover", borderRadius: "4px"}} onError={(e) => e.target.src = "https://via.placeholder.com/40"}/>
+                <img src={p.imagenUrl} alt="mini" style={{width: "40px", height: "40px", objectFit: "cover", borderRadius: "4px"}} onError={(e) => e.target.src = ""}/>
               </td>
               <td>{p.nombre}</td>
               <td><span className="badge bg-secondary">{p.idProd?.nombre || "N/A"}</span></td>
