@@ -142,27 +142,27 @@ handleError(error, method, url) {
   // USUARIOS
   // ==========================
   getUsuarios() {
-    return this.get("/usuario")
+    return this.get("/usuarios")
   }
 
   getUsuarioById(id) {
-    return this.get(`/usuario/${id}`)
+    return this.get(`/usuarios/${id}`)
   }
 
   crearUsuarioBasico(usuario) {
-    return this.post("/usuario", usuario)
+    return this.post("/usuarios", usuario)
   }
 
   crearUsuarioRegister(data) {
-    return this.post("/usuario/create-user", data)
+    return this.post("/usuarios/create-user", data)
   }
 
   actualizarUsuario(id, data) {
-    return this.put(`/usuario/${id}`, data)
+    return this.put(`/usuarios/${id}`, data)
   }
 
   eliminarUsuario(id) {
-    return this.delete(`/usuario/${id}`)
+    return this.delete(`/usuarios/${id}`)
   }
 
   // ==========================
@@ -192,23 +192,23 @@ handleError(error, method, url) {
   // TIPOS DE PRODUCTO
   // ==========================
   getTiposProducto() {
-    return this.get("/tipos-producto")
+    return this.get("/tipos-productos")
   }
 
   getTipoProductoById(id) {
-    return this.get(`/tipos-producto/${id}`)
+    return this.get(`/tipos-productos/${id}`)
   }
 
   crearTipoProducto(data) {
-    return this.post("/tipos-producto", data)
+    return this.post("/tipos-productos", data)
   }
 
   actualizarTipoProducto(id, data) {
-    return this.put(`/tipos-producto/${id}`, data)
+    return this.put(`/tipos-productos/${id}`, data)
   }
 
   eliminarTipoProducto(id) {
-    return this.delete(`/tipos-producto/${id}`)
+    return this.delete(`/tipos-productos/${id}`)
   }
 
   // ==========================
@@ -283,23 +283,23 @@ handleError(error, method, url) {
   // TIPOS DE DESPACHO
   // ==========================
   getTiposDespacho() {
-    return this.get("/tipos-despacho");
+    return this.get("/tipos-despachos");
   }
 
   getTipoDespachoById(id) {
-    return this.get(`/tipos-despacho/${id}`);
+    return this.get(`/tipos-despachos/${id}`);
   }
 
   crearTipoDespacho(data) {
-    return this.post("/tipos-despacho", data);
+    return this.post("/tipos-despachos", data);
   }
 
   actualizarTipoDespacho(id, data) {
-    return this.put(`/tipos-despacho/${id}`, data);
+    return this.put(`/tipos-despachos/${id}`, data);
   }
 
   eliminarTipoDespacho(id) {
-    return this.delete(`/tipos-despacho/${id}`);
+    return this.delete(`/tipos-despachos/${id}`);
   }
 
 }

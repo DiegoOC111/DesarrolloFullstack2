@@ -33,12 +33,12 @@ export default function App({ initialPage = "home" }) {
       content = <Login data-testid="login" />;
       break;
     case "registro":
-      content = <Registro data-testid="perfil" />;
+      content = <Registro data-testid="registro" />;
 
       break;
 
     case "perfil":
-      content = <Perfil data-testid="registro" />;
+      content = <Perfil data-testid="perfil" />;
 
       break;
     case "adminpanel":
