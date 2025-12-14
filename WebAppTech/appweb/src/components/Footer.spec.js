@@ -1,53 +1,63 @@
-// Footer.spec.js
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import Footer from "./Footer";
 
-describe("Footer Component - cobertura total", () => {
+describe("Footer Component - Cobertura Total (Jasmine)", () => {
+  let container;
 
   beforeEach(() => {
-    render(<Footer />);
+    // 1. Renderizamos y guardamos el 'container' (el div que envuelve al componente)
+    // Esto es mejor práctica en Karma que usar 'document' global.
+    const rendered = render(<Footer />);
+    container = rendered.container;
   });
 
-  it("renderiza el footer principal", () => {
+  it("renderiza el footer principal y su contenedor interno", () => {
+    // Buscamos por test-id
     const footer = screen.getByTestId("footer");
     expect(footer).toBeTruthy();
-    const container = footer.querySelector(".container");
-    expect(container).toBeTruthy();
+    
+    // Verificamos clases de Bootstrap
+    expect(footer.classList.contains("bg-dark")).toBe(true);
+    
+    // Buscamos el div .container dentro
+    const innerContainer = container.querySelector(".container");
+    expect(innerContainer).toBeTruthy();
   });
 
-  it("muestra el copyright", () => {
+  it("muestra el texto de copyright exacto", () => {
+    // getByText es perfecto aquí porque sí hay texto visible
     expect(screen.getByText("© 2025 Carlos y Diego")).toBeTruthy();
   });
 
-  it("renderiza los iconos de redes sociales", () => {
-    const twitter = screen.getByText((content, element) =>
-      element.tagName === "I" && element.classList.contains("bi-twitter")
-    );
-    const instagram = screen.getByText((content, element) =>
-      element.tagName === "I" && element.classList.contains("bi-instagram")
-    );
-    const facebook = screen.getByText((content, element) =>
-      element.tagName === "I" && element.classList.contains("bi-facebook")
-    );
+  it("renderiza los 3 iconos de redes sociales correctamente", () => {
+    // Usamos querySelector directo a las clases. 
+    // Es más robusto que buscar "texto" en un icono vacío.
+    const twitter = container.querySelector("i.bi-twitter");
+    const instagram = container.querySelector("i.bi-instagram");
+    const facebook = container.querySelector("i.bi-facebook");
+
     expect(twitter).toBeTruthy();
     expect(instagram).toBeTruthy();
     expect(facebook).toBeTruthy();
   });
 
-  it("cada icono está dentro de un enlace con href correcto", () => {
-    const links = document.querySelectorAll("ul.nav li a");
+  it("verifica que los iconos están dentro de enlaces", () => {
+    // Buscamos todos los <a> dentro del footer
+    const links = container.querySelectorAll("a");
+    
     expect(links.length).toBe(3);
-    links.forEach((link) => {
-      expect(link.getAttribute("href")).toBe("#");
-    });
-  });
 
-  it("cubre branches: existencia de contenedor y iconos", () => {
-    const container = document.querySelector(".container");
-    expect(container).toBeTruthy();
-    const icons = document.querySelectorAll("i.bi-twitter, i.bi-instagram, i.bi-facebook");
-    expect(icons.length).toBe(3);
+    links.forEach(link => {
+      // 1. Verificar href
+      expect(link.getAttribute("href")).toBe("#");
+      
+      // 2. Verificar que tiene clase de texto blanco
+      expect(link.classList.contains("text-white")).toBe(true);
+
+      // 3. Verificar que TIENE un hijo <i> (el icono)
+      expect(link.querySelector("i")).toBeTruthy();
+    });
   });
 
 });

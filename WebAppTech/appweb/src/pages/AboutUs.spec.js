@@ -1,26 +1,72 @@
-import { render, screen } from "@testing-library/react";
 import React from "react";
-import AboutUs from "../pages/AboutUs"; 
+import { render, screen } from "@testing-library/react";
+// CORRECCIÓN IMPORTANTE: Verifica si tu archivo es About.jsx o AboutUs.jsx
+// Si el archivo en la carpeta pages se llama AboutUs.jsx, usa esto:
+import AboutUs from "./AboutUs"; 
 
-describe("AboutUs Component Testing", () => {
-  
-  it("debe renderizar todos los títulos de sección principales", () => {
-    // 1. Renderizar el componente
-    render(<AboutUs />);
+describe("AboutUs Component - Cobertura Total (Jasmine)", () => {
+  let container;
 
-    // 2. Verificar que el título principal de la sección "¿Quiénes somos?" 
-    expect(screen.getByRole("heading", { name: /¿quiénes somos\?/i })).toBeTruthy();
-
-    // 3. Verificar que el título de "Nuestra Misión" esté presente.
-    expect(screen.getByRole("heading", { name: /nuestra misión/i })).toBeTruthy();
-
-    // 4. Verificar que el título de "Nuestra Visión" esté presente.
-    expect(screen.getByRole("heading", { name: /nuestra visión/i })).toBeTruthy();
+  beforeEach(() => {
+    // Renderizamos y guardamos el contenedor para búsquedas seguras
+    const rendered = render(<AboutUs />);
+    container = rendered.container;
   });
 
-  it("debe verificar que el componente AboutUs se renderiza y contiene texto clave", () => {
-    render(<AboutUs />);
+  // 1. Estructura General
+  it("renderiza el contenedor principal y las 3 tarjetas de información", () => {
+    const mainContainer = screen.getByTestId("aboutus");
+    expect(mainContainer).toBeTruthy();
+    expect(mainContainer.classList.contains("container")).toBe(true);
 
-    expect(screen.getByText(/somos una tienda online dedicada a satisfacer las necesidades/i)).toBeTruthy();
+    // Usamos container.querySelectorAll en lugar de document
+    const cards = container.querySelectorAll(".card");
+    expect(cards.length).toBe(3);
+    
+    cards.forEach(card => {
+        expect(card.classList.contains("card-custom")).toBe(true);
+        expect(card.classList.contains("shadow-sm")).toBe(true);
+    });
   });
+
+  // 2. Imagen
+  it("renderiza la imagen del equipo con sus atributos", () => {
+    const img = container.querySelector("img.card-img-top");
+    
+    expect(img).toBeTruthy();
+    expect(img.getAttribute("alt")).toBe("Equipo Level-up Gamer");
+    expect(img.getAttribute("src")).toBeTruthy();
+  });
+
+  // 3. Títulos (Headings)
+  it("renderiza los 3 títulos de sección correctamente", () => {
+    const titles = container.querySelectorAll(".card-title");
+    
+    expect(titles.length).toBe(3);
+    expect(titles[0].textContent).toBe("¿Quiénes somos?");
+    expect(titles[1].textContent).toBe("Nuestra Misión");
+    expect(titles[2].textContent).toBe("Nuestra Visión");
+  });
+
+  // 4. Contenido de Texto y Estilos
+  it("renderiza los párrafos de texto con el color negro forzado", () => {
+    const paragraphs = container.querySelectorAll("p.card-text");
+    
+    expect(paragraphs.length).toBe(3);
+
+    // Verificamos contenido
+    // toMatch funciona igual en Jasmine
+    expect(paragraphs[0].textContent).toMatch(/Somos una tienda online dedicada/i);
+    expect(paragraphs[1].textContent).toMatch(/Proporcionar productos de alta calidad/i);
+    expect(paragraphs[2].textContent).toMatch(/Ser la tienda online líder/i);
+
+    // Verificamos el estilo inline
+    paragraphs.forEach(p => {
+        const color = p.style.color;
+        // Los navegadores en Karma pueden normalizar a RGB o Hex
+        const esNegro = color === "rgb(0, 0, 0)" || color === "#000000" || color === "black";
+        expect(esNegro).toBe(true);
+    });
+  });
+
 });
